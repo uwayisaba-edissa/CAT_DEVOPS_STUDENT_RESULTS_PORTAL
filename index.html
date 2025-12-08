@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Results Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --secondary: #f093fb;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --text: #333;
+            --border: #e0e0e0;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text);
+        }
+
+        /* ===== LOGIN PAGE ===== */
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 420px;
+            padding: 50px 40px;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-container h1 {
+            color: var(--dark);
+            font-size: 2.2em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-container p {
+            color: #999;
+            margin-bottom: 35px;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .login-form .form-group {
+            margin: 0;
+            text-align: left;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .login-form input,
+        .login-form select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: var(--transition);
+            background: #fafafa;
+        }
+
+        .login-form input:focus,
+        .login-form select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-form button {
+            padding: 13px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 8px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .login-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-form button:active {
+            transform: translateY(0);
+        }
+
+        .demo-credentials {
+            background: linear-gradient(135deg, #f5f7ff, #f0f0ff);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 28px;
+            font-size: 0.85em;
+            color: #555;
+            border-left: 4px solid var(--primary);
+        }
+
+        .demo-credentials p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .demo-credentials strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ===== APP CONTAINER ===== */
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 1200px;
+            padding: 45px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 45px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid var(--light);
+            gap: 20px;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        h1 {
+            color: var(--dark);
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.05em;
+            font-weight: 500;
+        }
+
+        .logout-section {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .user-info {
+            color: var(--text);
+            font-size: 0.95em;
+            font-weight: 600;
+            background: var(--light);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #ff6b6b, #dc3545);
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(220, 53, 69, 0.3);
+        }
+
+        /* ===== NAVIGATION TABS ===== */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 35px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .nav-tabs button {
+            padding: 10px 18px;
+            background: transparent;
+            border: none;
+            font-size: 0.95em;
+            color: #888;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .nav-tabs button:hover {
+            color: var(--primary);
+            background: var(--light);
+        }
+
+        .nav-tabs button.active {
+            color: var(--primary);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .nav-tabs button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        /* ===== TAB CONTENT ===== */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h2 {
+            color: var(--dark);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .tab-content h3 {
+            color: var(--dark);
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .tab-content h4 {
+            color: var(--text);
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* ===== FORMS ===== */
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: var(--transition);
+            background: #fafafa;
+        }
+
+        input:hover, select:hover, textarea:hover {
+            border-color: #d0d0d0;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* ===== BUTTONS ===== */
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* ===== TABLES ===== */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #f5f7ff, #f0f0ff);
+            color: var(--dark);
+            padding: 16px;
+            text-align: left;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border);
+            font-size: 0.95em;
+        }
+
+        table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        table tbody tr {
+            transition: var(--transition);
+        }
+
+        table tbody tr:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05), transparent);
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== BADGES ===== */
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.passed {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+        }
+
+        .badge.failed {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+        }
+
+        /* ===== MESSAGES ===== */
+        .message {
+            padding: 16px 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: none;
+            font-weight: 600;
+            border-left: 4px solid transparent;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border-left-color: #28a745;
+            display: block;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border-left-color: #dc3545;
+            display: block;
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-delete,
+        .btn-update {
+            padding: 8px 16px;
+            font-size: 0.9em;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ff6b6b, #dc3545);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-update {
+            background: linear-gradient(135deg, #51cf66, #28a745);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-update:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(40, 167, 69, 0.3);
+        }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 35px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 440px;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 18px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: var(--dark);
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            font-weight: bold;
+            color: #ccc;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        /* ===== STATISTICS CARDS ===== */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 28px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin: 12px 0;
+            letter-spacing: -1px;
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        .dashboard-content {
+            margin-top: 25px;
+        }
+
+        .dashboard-section {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .dashboard-section h4 {
+            color: var(--dark);
+            margin-bottom: 18px;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            .nav-tabs {
+                gap: 4px;
+                margin-bottom: 25px;
+            }
+
+            .nav-tabs button {
+                padding: 8px 14px;
+                font-size: 0.85em;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logout-section {
+                align-items: flex-start;
+                margin-top: 15px;
+                width: 100%;
+            }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <h1>📚 Login</h1>
+        <p>Student Results Portal</p>
+        
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="userRole">Select Role:</label>
+                <select id="userRole" required>
+                    <option value="">-- Choose Role --</option>
+                    <option value="admin">Admin</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="student">Student</option>
+                </select>
+            </div>
+            <input 
+                type="text" 
+                id="username" 
+                placeholder="Username" 
+                required
+                autocomplete="username"
+            >
+            <input 
+                type="password" 
+                id="password" 
+                placeholder="Password" 
+                required
+                autocomplete="current-password"
+            >
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="demo-credentials">
+            <p><strong>Demo Credentials:</strong></p>
+            <p><strong>Admin:</strong> Username: admin | Password: admin123</p>
+            <p><strong>Teacher:</strong> Username: teacher | Password: teacher123</p>
+            <p><strong>Student:</strong> Username: student | Password: student123</p>
+        </div>
+    </div>
+
+    <!-- Main App Page -->
+    <div id="appPage" class="container hidden">
+        <header>
+            <div class="header-content">
+                <h1>📚 Student Results Portal</h1>
+                <p class="subtitle">Manage and track student academic performance</p>
+            </div>
+            <div class="logout-section">
+                <div class="user-info">Welcome, <span id="currentUser">User</span></div>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="tab-dashboard" data-tab="dashboard">Dashboard</button>
+            <button class="tab-btn" id="tab-add-student" data-tab="add-student">Add Student</button>
+            <button class="tab-btn" id="tab-add-subject" data-tab="add-subject">Add Subject</button>
+            <button class="tab-btn" id="tab-add-marks" data-tab="add-marks">Add Marks</button>
+            <button class="tab-btn" id="tab-results" data-tab="results">View Results</button>
+            <button class="tab-btn" id="tab-statistics" data-tab="statistics">Statistics</button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <h2>Dashboard</h2>
+            <div id="studentDashboard">
+                <h3>Your Academic Performance</h3>
+                <div class="dashboard-content">
+                    <div class="dashboard-section">
+                        <h4>Recent Marks</h4>
+                        <div class="table-container">
+                            <table id="studentMarksTable">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Marks Obtained</th>
+                                        <th>Grade</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentMarksTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="adminDashboard" class="hidden">
+                <h3>System Overview</h3>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Students</div>
+                        <div class="stat-value" id="dashTotalStudents">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Subjects</div>
+                        <div class="stat-value" id="dashTotalSubjects">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Results Entered</div>
+                        <div class="stat-value" id="dashTotalResults">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Average Score</div>
+                        <div class="stat-value" id="dashAverageScore">0</div>
+                    </div>
+                </div>
+            </div>
+            <div id="teacherDashboard" class="hidden">
+                <h3>Results Management Overview</h3>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Results This Month</div>
+                        <div class="stat-value" id="dashMonthResults">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Pending Updates</div>
+                        <div class="stat-value" id="dashPendingUpdates">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Subjects Managed</div>
+                        <div class="stat-value" id="dashManagedSubjects">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Student Tab -->
+        <div id="add-student" class="tab-content active">
+            <h2>Add New Student</h2>
+            <form id="studentForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentName">Student Name:</label>
+                        <input type="text" id="studentName" required placeholder="Enter student name">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentEmail">Email:</label>
+                        <input type="email" id="studentEmail" required placeholder="Enter email address">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="studentPhone">Phone Number:</label>
+                    <input type="tel" id="studentPhone" placeholder="Enter phone number">
+                </div>
+                <button type="submit">Add Student</button>
+            </form>
+            <div class="table-container">
+                <table id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Add Subject Tab -->
+        <div id="add-subject" class="tab-content">
+            <h2>Add New Subject</h2>
+            <form id="subjectForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="subjectName">Subject Name:</label>
+                        <input type="text" id="subjectName" required placeholder="Enter subject name">
+                    </div>
+                    <div class="form-group">
+                        <label for="subjectCode">Subject Code:</label>
+                        <input type="text" id="subjectCode" required placeholder="Enter subject code">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="subjectCredits">Credits:</label>
+                    <input type="number" id="subjectCredits" required min="1" max="4" placeholder="Enter credit hours">
+                </div>
+                <button type="submit">Add Subject</button>
+            </form>
+            <div class="table-container">
+                <table id="subjectTable">
+                    <thead>
+                        <tr>
+                            <th>Subject ID</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Credits</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subjectTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Add Marks Tab -->
+        <div id="add-marks" class="tab-content">
+            <h2>Add Student Marks</h2>
+            <form id="marksForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="marksStudent">Select Student:</label>
+                        <select id="marksStudent" required>
+                            <option value="">-- Choose Student --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="marksSubject">Select Subject:</label>
+                        <select id="marksSubject" required>
+                            <option value="">-- Choose Subject --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="marksObtained">Marks Obtained (out of 100):</label>
+                        <input type="number" id="marksObtained" required min="0" max="100" placeholder="Enter marks">
+                    </div>
+                    <div class="form-group">
+                        <label for="marksDate">Date:</label>
+                        <input type="date" id="marksDate" required>
+                    </div>
+                </div>
+                <button type="submit">Add Marks</button>
+            </form>
+        </div>
+
+        <!-- Results Tab -->
+        <div id="results" class="tab-content">
+            <h2>Student Results</h2>
+            <div class="form-group">
+                <label for="resultsStudent">Filter by Student:</label>
+                <select id="resultsStudent">
+                    <option value="">-- All Students --</option>
+                </select>
+            </div>
+            <div class="table-container">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Subject</th>
+                            <th>Marks Obtained</th>
+                            <th>Grade</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Statistics Tab -->
+        <div id="statistics" class="tab-content">
+            <h2>Statistics</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Students</div>
+                    <div class="stat-value" id="totalStudents">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Subjects</div>
+                    <div class="stat-value" id="totalSubjects">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average Score</div>
+                    <div class="stat-value" id="averageScore">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pass Rate</div>
+                    <div class="stat-value" id="passRate">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Student Modal -->
+    <div id="editStudentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Student</h2>
+                <button class="close-modal" onclick="closeEditStudentModal()">&times;</button>
+            </div>
+            <form id="editStudentForm">
+                <input type="hidden" id="editStudentId">
+                <div class="form-group">
+                    <label for="editStudentName">Student Name:</label>
+                    <input type="text" id="editStudentName" required placeholder="Enter student name">
+                </div>
+                <div class="form-group">
+                    <label for="editStudentEmail">Email:</label>
+                    <input type="email" id="editStudentEmail" required placeholder="Enter email address">
+                </div>
+                <div class="form-group">
+                    <label for="editStudentPhone">Phone Number:</label>
+                    <input type="tel" id="editStudentPhone" placeholder="Enter phone number">
+                </div>
+                <button type="submit">Update Student</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Subject Modal -->
+    <div id="editSubjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Subject</h2>
+                <button class="close-modal" onclick="closeEditSubjectModal()">&times;</button>
+            </div>
+            <form id="editSubjectForm">
+                <input type="hidden" id="editSubjectId">
+                <div class="form-group">
+                    <label for="editSubjectName">Subject Name:</label>
+                    <input type="text" id="editSubjectName" required placeholder="Enter subject name">
+                </div>
+                <div class="form-group">
+                    <label for="editSubjectCode">Subject Code:</label>
+                    <input type="text" id="editSubjectCode" required placeholder="Enter subject code">
+                </div>
+                <div class="form-group">
+                    <label for="editSubjectCredits">Credits:</label>
+                    <input type="number" id="editSubjectCredits" required min="1" max="4" placeholder="Enter credit hours">
+                </div>
+                <button type="submit">Update Subject</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ===========================
+        // LOCAL STORAGE MANAGEMENT
+        // ===========================
+        const StorageManager = {
+            // Initialize default data
+            init() {
+                if (!localStorage.getItem('students')) {
+                    localStorage.setItem('students', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('subjects')) {
+                    localStorage.setItem('subjects', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('marks')) {
+                    localStorage.setItem('marks', JSON.stringify([]));
+                }
+            },
+
+            // Students
+            getStudents() {
+                return JSON.parse(localStorage.getItem('students') || '[]');
+            },
+
+            addStudent(name, email, phone) {
+                const students = this.getStudents();
+                const newStudent = {
+                    student_id: Date.now(),
+                    name,
+                    email,
+                    phone
+                };
+                students.push(newStudent);
+                localStorage.setItem('students', JSON.stringify(students));
+                return newStudent;
+            },
+
+            deleteStudent(id) {
+                let students = this.getStudents();
+                students = students.filter(s => s.student_id !== id);
+                localStorage.setItem('students', JSON.stringify(students));
+            },
+
+            updateStudent(id, name, email, phone) {
+                let students = this.getStudents();
+                const student = students.find(s => s.student_id === id);
+                if (student) {
+                    student.name = name;
+                    student.email = email;
+                    student.phone = phone;
+                    localStorage.setItem('students', JSON.stringify(students));
+                    return student;
+                }
+                return null;
+            },
+            getSubjects() {
+                return JSON.parse(localStorage.getItem('subjects') || '[]');
+            },
+
+            addSubject(name, code, credits) {
+                const subjects = this.getSubjects();
+                const newSubject = {
+                    subject_id: Date.now(),
+                    name,
+                    code,
+                    credits
+                };
+                subjects.push(newSubject);
+                localStorage.setItem('subjects', JSON.stringify(subjects));
+                return newSubject;
+            },
+
+            deleteSubject(id) {
+                let subjects = this.getSubjects();
+                subjects = subjects.filter(s => s.subject_id !== id);
+                localStorage.setItem('subjects', JSON.stringify(subjects));
+            },
+
+            updateSubject(id, name, code, credits) {
+                let subjects = this.getSubjects();
+                const subject = subjects.find(s => s.subject_id === id);
+                if (subject) {
+                    subject.name = name;
+                    subject.code = code;
+                    subject.credits = credits;
+                    localStorage.setItem('subjects', JSON.stringify(subjects));
+                    return subject;
+                }
+                return null;
+            },
+            getMarks() {
+                return JSON.parse(localStorage.getItem('marks') || '[]');
+            },
+
+            addMark(student_id, subject_id, marks_obtained, date) {
+                const marks = this.getMarks();
+                const newMark = {
+                    mark_id: Date.now(),
+                    student_id: parseInt(student_id),
+                    subject_id: parseInt(subject_id),
+                    marks_obtained: parseInt(marks_obtained),
+                    date
+                };
+                marks.push(newMark);
+                localStorage.setItem('marks', JSON.stringify(marks));
+                return newMark;
+            },
+
+            // Results
+            getResults() {
+                const marks = this.getMarks();
+                const students = this.getStudents();
+                const subjects = this.getSubjects();
+
+                return marks.map(m => {
+                    const student = students.find(s => s.student_id === m.student_id);
+                    const subject = subjects.find(s => s.subject_id === m.subject_id);
+                    return {
+                        mark_id: m.mark_id,
+                        student_name: student?.name || 'Unknown',
+                        subject_name: subject?.name || 'Unknown',
+                        marks_obtained: m.marks_obtained,
+                        date: m.date
+                    };
+                });
+            }
+        };
+
+        // ===========================
+        // ROLE-BASED ACCESS CONTROL
+        // ===========================
+        const RoleManager = {
+            getCurrentRole() {
+                return localStorage.getItem('userRole') || 'student';
+            },
+
+            getCurrentUser() {
+                return localStorage.getItem('currentUser') || 'guest';
+            },
+
+            canAddStudent() {
+                return this.getCurrentRole() === 'admin';
+            },
+
+            canAddSubject() {
+                return this.getCurrentRole() === 'admin';
+            },
+
+            canAddMarks() {
+                return ['admin', 'teacher'].includes(this.getCurrentRole());
+            },
+
+            canEditStudent() {
+                return this.getCurrentRole() === 'admin';
+            },
+
+            canDeleteStudent() {
+                return this.getCurrentRole() === 'admin';
+            },
+
+            canDeleteSubject() {
+                return this.getCurrentRole() === 'admin';
+            },
+
+            canViewStatistics() {
+                return ['admin', 'teacher'].includes(this.getCurrentRole());
+            },
+
+            canViewAllResults() {
+                return ['admin', 'teacher'].includes(this.getCurrentRole());
+            },
+
+            getAccessibleTabs() {
+                const role = this.getCurrentRole();
+                const baseTabs = ['dashboard', 'results'];
+
+                if (role === 'admin') {
+                    return baseTabs.concat(['add-student', 'add-subject', 'add-marks', 'statistics']);
+                } else if (role === 'teacher') {
+                    return baseTabs.concat(['add-marks', 'statistics']);
+                } else {
+                    return baseTabs; // Student - only dashboard and results
+                }
+            },
+
+            showAllowedTabs() {
+                const accessibleTabs = this.getAccessibleTabs();
+                const allTabBtns = document.querySelectorAll('.tab-btn');
+
+                allTabBtns.forEach(btn => {
+                    const tabId = btn.getAttribute('id');
+                    const tabName = btn.getAttribute('data-tab');
+                    const isAccessible = accessibleTabs.includes(tabName);
+
+                    if (isAccessible) {
+                        btn.classList.remove('hidden');
+                    } else {
+                        btn.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and contents
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                btn.classList.add('active');
+                document.getElementById(tabName).classList.add('active');
+            });
+        });
+
+        // Show message
+        function showMessage(message, type = 'success') {
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = message;
+            msgEl.className = `message ${type}`;
+            setTimeout(() => msgEl.className = 'message', 5000);
+        }
+
+        // Set today's date in date input
+        document.getElementById('marksDate').valueAsDate = new Date();
+
+        // Student Form
+        document.getElementById('studentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (!RoleManager.canAddStudent()) {
+                showMessage('You do not have permission to add students', 'error');
+                return;
+            }
+
+            const name = document.getElementById('studentName').value;
+            const email = document.getElementById('studentEmail').value;
+            const phone = document.getElementById('studentPhone').value;
+
+            try {
+                StorageManager.addStudent(name, email, phone);
+                showMessage('Student added successfully!', 'success');
+                document.getElementById('studentForm').reset();
+                loadStudents();
+                loadStudentsDropdown();
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error adding student', 'error');
+            }
+        });
+
+        // Subject Form
+        document.getElementById('subjectForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (!RoleManager.canAddSubject()) {
+                showMessage('You do not have permission to add subjects', 'error');
+                return;
+            }
+
+            const name = document.getElementById('subjectName').value;
+            const code = document.getElementById('subjectCode').value;
+            const credits = document.getElementById('subjectCredits').value;
+
+            try {
+                StorageManager.addSubject(name, code, credits);
+                showMessage('Subject added successfully!', 'success');
+                document.getElementById('subjectForm').reset();
+                loadSubjects();
+                loadSubjectsDropdown();
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error adding subject', 'error');
+            }
+        });
+
+        // Marks Form
+        document.getElementById('marksForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (!RoleManager.canAddMarks()) {
+                showMessage('You do not have permission to add marks', 'error');
+                return;
+            }
+
+            const student_id = document.getElementById('marksStudent').value;
+            const subject_id = document.getElementById('marksSubject').value;
+            const marks_obtained = document.getElementById('marksObtained').value;
+            const date = document.getElementById('marksDate').value;
+
+            try {
+                StorageManager.addMark(student_id, subject_id, marks_obtained, date);
+                showMessage('Marks added successfully!', 'success');
+                document.getElementById('marksForm').reset();
+                document.getElementById('marksDate').valueAsDate = new Date();
+                loadResults();
+                loadStatistics();
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error adding marks', 'error');
+            }
+        });
+
+        // Load data functions
+        function loadStudents() {
+            const students = StorageManager.getStudents();
+            const tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = students.map(s => `
+                <tr>
+                    <td>${s.student_id}</td>
+                    <td>${s.name}</td>
+                    <td>${s.email}</td>
+                    <td>${s.phone || '-'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-update" onclick="openEditStudentModal(${s.student_id})">Edit</button>
+                            <button class="btn-delete" onclick="deleteStudent(${s.student_id})">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadDashboard() {
+            const role = RoleManager.getCurrentRole();
+
+            // Hide all dashboards first
+            document.getElementById('studentDashboard').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('teacherDashboard').classList.add('hidden');
+
+            if (role === 'student') {
+                document.getElementById('studentDashboard').classList.remove('hidden');
+                loadStudentMarks();
+            } else if (role === 'admin') {
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                document.getElementById('dashTotalStudents').textContent = StorageManager.getStudents().length;
+                document.getElementById('dashTotalSubjects').textContent = StorageManager.getSubjects().length;
+                document.getElementById('dashTotalResults').textContent = StorageManager.getMarks().length;
+                const results = StorageManager.getResults();
+                if (results.length > 0) {
+                    const avgScore = results.reduce((sum, r) => sum + r.marks_obtained, 0) / results.length;
+                    document.getElementById('dashAverageScore').textContent = avgScore.toFixed(2);
+                }
+            } else if (role === 'teacher') {
+                document.getElementById('teacherDashboard').classList.remove('hidden');
+                const marks = StorageManager.getMarks();
+                const thisMonth = marks.filter(m => {
+                    const markDate = new Date(m.date);
+                    const now = new Date();
+                    return markDate.getMonth() === now.getMonth() && markDate.getFullYear() === now.getFullYear();
+                });
+                document.getElementById('dashMonthResults').textContent = thisMonth.length;
+                document.getElementById('dashPendingUpdates').textContent = Math.max(0, thisMonth.length - Math.floor(thisMonth.length * 0.8));
+                document.getElementById('dashManagedSubjects').textContent = StorageManager.getSubjects().length;
+            }
+        }
+
+        function loadStudentMarks() {
+            const results = StorageManager.getResults();
+            const tbody = document.getElementById('studentMarksTableBody');
+            tbody.innerHTML = results.map(r => `
+                <tr>
+                    <td>${r.subject_name}</td>
+                    <td>${r.marks_obtained}</td>
+                    <td>${calculateGrade(r.marks_obtained)}</td>
+                    <td>
+                        <span class="badge ${r.marks_obtained >= 40 ? 'passed' : 'failed'}">
+                            ${r.marks_obtained >= 40 ? 'Passed' : 'Failed'}
+                        </span>
+                    </td>
+                    <td>${new Date(r.date).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+
+            if (results.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No marks entered yet</td></tr>';
+            }
+        }
+
+        function loadSubjects() {
+            const subjects = StorageManager.getSubjects();
+            const tbody = document.getElementById('subjectTableBody');
+            tbody.innerHTML = subjects.map(s => `
+                <tr>
+                    <td>${s.subject_id}</td>
+                    <td>${s.name}</td>
+                    <td>${s.code}</td>
+                    <td>${s.credits}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-update" onclick="openEditSubjectModal(${s.subject_id})">Edit</button>
+                            <button class="btn-delete" onclick="deleteSubject(${s.subject_id})">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadResults() {
+            const results = StorageManager.getResults();
+            const tbody = document.getElementById('resultsTableBody');
+            tbody.innerHTML = results.map(r => `
+                <tr>
+                    <td>${r.student_name}</td>
+                    <td>${r.subject_name}</td>
+                    <td>${r.marks_obtained}</td>
+                    <td>${calculateGrade(r.marks_obtained)}</td>
+                    <td>
+                        <span class="badge ${r.marks_obtained >= 40 ? 'passed' : 'failed'}">
+                            ${r.marks_obtained >= 40 ? 'Passed' : 'Failed'}
+                        </span>
+                    </td>
+                    <td>${new Date(r.date).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        function loadStudentsDropdown() {
+            const students = StorageManager.getStudents();
+            const select = document.getElementById('marksStudent');
+            const resultsSelect = document.getElementById('resultsStudent');
+            const options = students.map(s => `<option value="${s.student_id}">${s.name}</option>`).join('');
+            select.innerHTML = '<option value="">-- Choose Student --</option>' + options;
+            resultsSelect.innerHTML = '<option value="">-- All Students --</option>' + options;
+        }
+
+        function loadSubjectsDropdown() {
+            const subjects = StorageManager.getSubjects();
+            const select = document.getElementById('marksSubject');
+            const options = subjects.map(s => `<option value="${s.subject_id}">${s.name}</option>`).join('');
+            select.innerHTML = '<option value="">-- Choose Subject --</option>' + options;
+        }
+
+        function loadStatistics() {
+            const students = StorageManager.getStudents();
+            const subjects = StorageManager.getSubjects();
+            const results = StorageManager.getResults();
+
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('totalSubjects').textContent = subjects.length;
+
+            if (results.length > 0) {
+                const avgScore = results.reduce((sum, r) => sum + r.marks_obtained, 0) / results.length;
+                document.getElementById('averageScore').textContent = avgScore.toFixed(2);
+
+                const passCount = results.filter(r => r.marks_obtained >= 40).length;
+                const passRate = ((passCount / results.length) * 100).toFixed(1);
+                document.getElementById('passRate').textContent = passRate + '%';
+            }
+        }
+
+        function calculateGrade(marks) {
+            if (marks >= 90) return 'A';
+            if (marks >= 80) return 'B';
+            if (marks >= 70) return 'C';
+            if (marks >= 60) return 'D';
+            return 'F';
+        }
+
+        function deleteStudent(id) {
+            if (!RoleManager.canDeleteStudent()) {
+                showMessage('You do not have permission to delete students', 'error');
+                return;
+            }
+
+            if (confirm('Are you sure?')) {
+                try {
+                    StorageManager.deleteStudent(id);
+                    showMessage('Student deleted successfully!', 'success');
+                    loadStudents();
+                    loadStudentsDropdown();
+                    loadResults();
+                    loadStatistics();
+                } catch (error) {
+                    showMessage('Error deleting student', 'error');
+                }
+            }
+        }
+
+        function deleteSubject(id) {
+            if (!RoleManager.canDeleteSubject()) {
+                showMessage('You do not have permission to delete subjects', 'error');
+                return;
+            }
+
+            if (confirm('Are you sure?')) {
+                try {
+                    StorageManager.deleteSubject(id);
+                    showMessage('Subject deleted successfully!', 'success');
+                    loadSubjects();
+                    loadSubjectsDropdown();
+                    loadResults();
+                    loadStatistics();
+                } catch (error) {
+                    showMessage('Error deleting subject', 'error');
+                }
+            }
+        }
+
+        // Initial load
+        window.addEventListener('load', () => {
+            // Initialize local storage
+            StorageManager.init();
+            
+            // Check if user is logged in
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                showApp();
+                RoleManager.showAllowedTabs();
+                loadDashboard();
+                loadStudents();
+                loadSubjects();
+                loadResults();
+                loadStudentsDropdown();
+                loadSubjectsDropdown();
+                loadStatistics();
+            } else {
+                showLogin();
+            }
+        });
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const userRole = document.getElementById('userRole').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Demo credentials validation
+            const validCredentials = {
+                admin: { username: 'admin', password: 'admin123' },
+                teacher: { username: 'teacher', password: 'teacher123' },
+                student: { username: 'student', password: 'student123' }
+            };
+
+            if (!userRole) {
+                showMessage('Please select a role', 'error');
+                return;
+            }
+
+            const credentials = validCredentials[userRole];
+            if (username === credentials.username && password === credentials.password) {
+                localStorage.setItem('currentUser', username);
+                localStorage.setItem('userRole', userRole);
+                document.getElementById('currentUser').textContent = username + ' (' + userRole.toUpperCase() + ')';
+                showApp();
+                RoleManager.showAllowedTabs();
+                // Reset form
+                document.getElementById('loginForm').reset();
+                // Load data
+                loadDashboard();
+                loadStudents();
+                loadSubjects();
+                loadResults();
+                loadStudentsDropdown();
+                loadSubjectsDropdown();
+                loadStatistics();
+                showMessage('Login successful!', 'success');
+            } else {
+                showMessage('Invalid credentials for ' + userRole, 'error');
+            }
+        });
+
+        function showLogin() {
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('appPage').classList.add('hidden');
+        }
+
+        function showApp() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('appPage').classList.remove('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('userRole');
+            document.getElementById('loginForm').reset();
+            showLogin();
+            showMessage('You have been logged out', 'success');
+        }
+
+        // Modal functionality
+        function openEditStudentModal(id) {
+            const students = StorageManager.getStudents();
+            const student = students.find(s => s.student_id === id);
+            if (student) {
+                document.getElementById('editStudentId').value = id;
+                document.getElementById('editStudentName').value = student.name;
+                document.getElementById('editStudentEmail').value = student.email;
+                document.getElementById('editStudentPhone').value = student.phone;
+                document.getElementById('editStudentModal').classList.add('show');
+            }
+        }
+
+        function closeEditStudentModal() {
+            document.getElementById('editStudentModal').classList.remove('show');
+        }
+
+        function openEditSubjectModal(id) {
+            const subjects = StorageManager.getSubjects();
+            const subject = subjects.find(s => s.subject_id === id);
+            if (subject) {
+                document.getElementById('editSubjectId').value = id;
+                document.getElementById('editSubjectName').value = subject.name;
+                document.getElementById('editSubjectCode').value = subject.code;
+                document.getElementById('editSubjectCredits').value = subject.credits;
+                document.getElementById('editSubjectModal').classList.add('show');
+            }
+        }
+
+        function closeEditSubjectModal() {
+            document.getElementById('editSubjectModal').classList.remove('show');
+        }
+
+        // Edit student form
+        document.getElementById('editStudentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('editStudentId').value);
+            const name = document.getElementById('editStudentName').value;
+            const email = document.getElementById('editStudentEmail').value;
+            const phone = document.getElementById('editStudentPhone').value;
+
+            StorageManager.updateStudent(id, name, email, phone);
+            showMessage('Student updated successfully!', 'success');
+            closeEditStudentModal();
+            loadStudents();
+            loadStudentsDropdown();
+        });
+
+        // Edit subject form
+        document.getElementById('editSubjectForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('editSubjectId').value);
+            const name = document.getElementById('editSubjectName').value;
+            const code = document.getElementById('editSubjectCode').value;
+            const credits = document.getElementById('editSubjectCredits').value;
+
+            StorageManager.updateSubject(id, name, code, credits);
+            showMessage('Subject updated successfully!', 'success');
+            closeEditSubjectModal();
+            loadSubjects();
+            loadSubjectsDropdown();
+        });
+    </script>
+</body>
+</html>

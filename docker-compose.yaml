@@ -1,0 +1,43 @@
+services:
+  # MySQL Database Service
+  mysql:
+    image: mysql:8.0
+    container_name: student-results-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: student_results_db
+      MYSQL_USER: student_user
+      MYSQL_PASSWORD: student_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Node.js Application Service
+  app:
+    build: .
+    container_name: student-results-app
+    environment:
+      NODE_ENV: production
+      DB_HOST: mysql
+      DB_USER: student_user
+      DB_PASSWORD: student_password
+      DB_NAME: student_results_db
+      DB_PORT: 3306
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+
+volumes:
+  mysql_data:
+    driver: local
