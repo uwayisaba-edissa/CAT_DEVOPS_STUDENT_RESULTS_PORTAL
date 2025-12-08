@@ -1,0 +1,11 @@
+{
+  "testEnvironment": "jsdom",
+  "collectCoverageFrom": [
+    "**/*.{js,jsx}",
+    "!**/node_modules/**",
+    "!**/dist/**"
+  ],
+  "testMatch": [
+    "**/__tests__/**/*.test.js"
+  ]
+}
