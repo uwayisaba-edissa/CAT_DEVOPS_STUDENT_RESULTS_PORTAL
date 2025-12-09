@@ -14,43 +14,61 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-  # 2. Lint
+  # 2. Install Dependencies
+  install_dependencies:
+    runs-on: ubuntu-latest
+    needs: checkout_code
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+
+  # 3. Lint
   lint:
     runs-on: ubuntu-latest
-    needs: checkout_code
+    needs: install_dependencies
     steps:
-      uses: actions/checkout@v3
-      uses: actions/setup-node@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      run: npm install
-      run: npm run lint || true
+      - name: Install dependencies
+        run: npm install
+      - name: Run ESLint
+        run: npm run lint || true
 
-  # 3. Security Scan
+  # 4. Security Scan
   security_scan:
     runs-on: ubuntu-latest
-    needs: checkout_code
+    needs: install_dependencies
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: npm install
-      - run: npm audit --audit-level=moderate || true
+      - name: Install dependencies
+        run: npm install
+      - name: NPM Security Audit
+        run: npm audit --audit-level=moderate || true
 
-  # 4. Code Format Check
+  # 5. Code Format Check
   format_check:
     runs-on: ubuntu-latest
-    needs: checkout_code
+    needs: install_dependencies
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: npm install
-      - run: npm run format:check || true
+      - name: Install dependencies
+        run: npm install
+      - name: Prettier check
+        run: npm run format:check || true
 
-  # 5. Run Tests
+  # 6. Run Tests
   test:
     runs-on: ubuntu-latest
     needs: [lint, security_scan, format_check]
@@ -59,10 +77,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: npm install
-      - run: npm test
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
 
-  # 6. Build Application
+  # 7. Build Application
   build:
     runs-on: ubuntu-latest
     needs: test
@@ -71,21 +91,24 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: npm install
-      - run: npm run build || true
+      - name: Install dependencies
+        run: npm install
+      - name: Build application
+        run: npm run build || true
 
-  # 7. Upload Build Artifacts
+  # 8. Upload Build Artifacts
   upload_artifacts:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      uses: actions/checkout@v3
-      uses: actions/upload-artifact@v3
+      - uses: actions/checkout@v3
+      - name: Upload dist
+        uses: actions/upload-artifact@v3
         with:
           name: build-files
           path: dist
 
-  # 8. Code Coverage
+  # 9. Code Coverage
   code_coverage:
     runs-on: ubuntu-latest
     needs: test
@@ -94,34 +117,41 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: npm install
-      - run: npm run coverage || true
+      - name: Install dependencies
+        run: npm install
+      - name: Generate coverage
+        run: npm run coverage || true
 
-  # 9. Deploy Preview (PR only)
+  # 10. Deploy Preview (for PRs only)
   deploy_preview:
     runs-on: ubuntu-latest
     needs: build
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v3
-      - run: echo "Deploying preview environment..."
+      - name: Deploy preview (PR)
+        run: echo "Deploying preview environment..."
 
-  # 10. Docker Build
+  # 11. Docker Build Job
   docker_build:
     runs-on: ubuntu-latest
     needs: build
     steps:
       - uses: actions/checkout@v3
-      - run: docker build -t my-app:latest .
+      - name: Build Docker image
+        run: docker build -t my-app:latest .
 
-  # 11. Production Deployment
+  # 12. Production Deployment (Real Server)
   production_deploy:
     runs-on: ubuntu-latest
     needs: docker_build
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
-      - name: Deploy to production
+
+      - name: Deploy to production server (SSH)
         run: |
           echo "Deploying to production..."
-          # ssh commands here
+          # Example:
+          # ssh -o StrictHostKeyChecking=no user@YOUR_SERVER_IP \
+          # "cd /var/www/app && git pull && npm install && pm2 restart app"
