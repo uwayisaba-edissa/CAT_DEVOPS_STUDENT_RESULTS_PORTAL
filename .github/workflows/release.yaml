@@ -1,0 +1,73 @@
+name: Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger workflow on version tags (v1.0.0, v1.0.1, etc.)
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout code
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # 2️⃣ Set up Node.js (for scripts)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # 3️⃣ Set up Docker
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # 4️⃣ Log in to Docker Hub
+      - name: Docker Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      # 5️⃣ Bump version (optional if tag already created manually)
+      - name: Bump Version
+        run: |
+          chmod +x scripts/version.sh
+          ./scripts/version.sh patch   # change to minor/major if needed
+
+      # 6️⃣ Generate Changelog
+      - name: Generate Changelog
+        run: |
+          npm install -g auto-changelog
+          auto-changelog -p
+          git add CHANGELOG.md
+          git commit -m "chore(release): update changelog" || echo "No changes to commit"
+
+      # 7️⃣ Build Docker image
+      - name: Build Docker Image
+        run: |
+          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/student_results_portal
+          VERSION_TAG=$(git describe --tags --abbrev=0)
+          docker build -t $IMAGE_NAME:$VERSION_TAG -t $IMAGE_NAME:latest .
+
+      # 8️⃣ Push Docker image
+      - name: Push Docker Image
+        run: |
+          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/student_results_portal
+          VERSION_TAG=$(git describe --tags --abbrev=0)
+          docker push $IMAGE_NAME:$VERSION_TAG
+          docker push $IMAGE_NAME:latest
+
+      # 9️⃣ Create GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: $(git describe --tags --abbrev=0)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 🔟 Optional: Notify
+      - name: Release Complete
+        run: echo "Release pipeline finished successfully!"
