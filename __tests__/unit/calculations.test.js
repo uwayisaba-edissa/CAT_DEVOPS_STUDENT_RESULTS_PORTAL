@@ -60,11 +60,13 @@ describe('Class Statistics', () => {
     });
 
     test('should find median', () => {
-        const sorted = [...classMarks].sort((a, b) => a - b);
-        const median = sorted.length % 2 === 0
-            ? (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2
-            : sorted[Math.floor(sorted.length / 2)];
-        expect(median).toBe(79.5);
+        const scores = [65, 78, 82, 79, 95];
+        const sorted = [...scores].sort((a, b) => a - b);
+        const median = sorted.length % 2 !== 0 
+          ? sorted[Math.floor(sorted.length / 2)]
+          : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
+        
+        expect(median).toBe(79);
     });
 
     test('should find highest score', () => {
