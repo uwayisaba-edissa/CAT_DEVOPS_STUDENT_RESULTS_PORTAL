@@ -95,19 +95,6 @@ jobs:
         run: npm install
       - name: Build application
         run: npm run build || true
-
-  # 8. Upload Build Artifacts
-  upload_artifacts:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v3
-      - name: Upload dist
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-files
-          path: dist
-
   # 9. Code Coverage
   code_coverage:
     runs-on: ubuntu-latest
