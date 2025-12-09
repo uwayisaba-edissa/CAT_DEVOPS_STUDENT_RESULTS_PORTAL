@@ -1,6 +1,6 @@
 {
   "name": "student-results-portal",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Student Results Portal - Store marks and generate results with multi-table database design",
   "main": "index.js",
   "scripts": {
