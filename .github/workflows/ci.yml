@@ -129,17 +129,3 @@ jobs:
       - name: Build Docker image
         run: docker build -t my-app:latest .
 
-
-  # 11. Slack Notification
-  slack_notification:
-    runs-on: ubuntu-latest
-    needs: [docker_build]
-    if: always()   # runs even if jobs fail
-    steps:
-      - name: Send Slack Notification
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
